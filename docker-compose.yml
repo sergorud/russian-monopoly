@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  # Бэкенд сервер
+  backend:
+    build: ./backend
+    container_name: monopoly-backend
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/health"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+      start_period: 10s
+    networks:
+      - monopoly-network
+
+  # Фронтенд приложение
+  frontend:
+    build: ./frontend
+    container_name: monopoly-frontend
+    ports:
+      - "80:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - monopoly-network
+
+networks:
+  monopoly-network:
+    driver: bridge
