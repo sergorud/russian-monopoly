@@ -1,7 +1,6 @@
 version: '3.8'
 
 services:
-  # Бэкенд сервер
   backend:
     build: ./backend
     container_name: monopoly-backend
@@ -20,7 +19,6 @@ services:
     networks:
       - monopoly-network
 
-  # Фронтенд приложение
   frontend:
     build: ./frontend
     container_name: monopoly-frontend
